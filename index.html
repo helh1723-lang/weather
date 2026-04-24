@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>次元天气 - 动漫天气预报</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="weather-bg is-active" id="weatherBgCurrent" style="background-image: url('ChatGPT Image 2026年4月24日 10_13_00.png')"></div>
+    <div class="weather-bg" id="weatherBgNext" aria-hidden="true"></div>
+    <div class="page-shell">
+      <header class="topbar" aria-label="主导航">
+        <a class="brand" href="#" aria-label="次元天气首页">
+          <img src="mascot-assets/cloud-mascot-star.png" alt="" />
+          <span>
+            <strong>次元天气</strong>
+            <small>动漫天气预报</small>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="天气导航">
+          <a class="active" href="#today">首页</a>
+          <a href="#today">今日天气</a>
+          <a href="#forecast">未来7天</a>
+          <a href="#air">空气质量</a>
+          <a href="#life">生活指数</a>
+        </nav>
+
+        <div class="toolbar">
+          <button class="city-chip" id="cityChip" type="button" aria-label="当前城市">
+            <span>📍</span>
+            <strong id="chipCity">长春市</strong>
+          </button>
+          <form class="search" id="searchForm" role="search">
+            <label class="sr-only" for="cityInput">搜索城市</label>
+            <input id="cityInput" type="search" placeholder="搜索城市/景点/关键词" autocomplete="off" />
+            <button type="submit" aria-label="搜索">⌕</button>
+          </form>
+          <img class="avatar" id="hostAvatar" src="character-assets/weather-host.png" alt="天气播报员头像" />
+        </div>
+      </header>
+
+      <main>
+        <section class="hero-panel" id="today" aria-labelledby="todayTitle">
+          <div class="current-card glass">
+            <div class="city-line">
+              <span class="pin">●</span>
+              <h1 id="todayTitle">长春市</h1>
+              <button class="switch-btn" id="locateBtn" type="button">默认城市</button>
+            </div>
+            <p class="date-line" id="dateLine">正在获取天气...</p>
+
+            <div class="temperature-row">
+              <strong id="currentTemp">24</strong>
+              <span>°C</span>
+              <img id="currentIcon" src="weather-icons/sunny.png" alt="" />
+              <b id="weatherText">晴</b>
+            </div>
+
+            <div class="condition-row" aria-label="当前天气详情">
+              <span id="windText">东南风 2级</span>
+              <span id="humidityText">湿度 42%</span>
+              <span id="feelsText">体感 23°C</span>
+            </div>
+
+            <div class="sun-row">
+              <span id="sunriseText">日出 04:36</span>
+              <span id="sunsetText">日落 19:12</span>
+            </div>
+          </div>
+
+          <img class="host" id="weatherHost" src="character-assets/weather-host.png" alt="动漫天气播报员" />
+
+          <div class="host-side">
+            <div class="speech glass">
+              <div>
+                <span>天气播报员 小晴</span>
+                <b>⭐</b>
+              </div>
+              <p id="reportText">今天是晴天，阳光明媚，适合出门散步哦！记得做好防晒，多喝水保持好心情~</p>
+              <img src="mascot-assets/cloud-mascot-star.png" alt="" />
+            </div>
+
+            <div class="metric-grid" aria-label="实时指标">
+              <article class="metric glass">
+                <span>紫外线</span>
+                <b>☀️</b>
+                <strong id="uvText">UV 7</strong>
+              </article>
+              <article class="metric glass">
+                <span>降水概率</span>
+                <b>☂️</b>
+                <strong id="rainChanceText">10%</strong>
+              </article>
+              <article class="metric glass">
+                <span>空气湿度</span>
+                <b>💧</b>
+                <strong id="metricHumidityText">42%</strong>
+              </article>
+              <article class="metric glass">
+                <span>能见度</span>
+                <b>👁️</b>
+                <strong id="visibilityText">24 km</strong>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <article class="forecast-card glass" id="forecast">
+            <div class="section-title">
+              <h2>未来7天天气预报</h2>
+            </div>
+            <div class="forecast-list" id="forecastList" aria-live="polite"></div>
+          </article>
+
+          <article class="chart-card glass">
+            <div class="section-title chart-title">
+              <h2>24 小时气温变化</h2>
+              <div class="legend">
+                <span><i class="pink"></i> 温度(°C)</span>
+                <span><i class="blue"></i> 体感(°C)</span>
+              </div>
+            </div>
+            <div class="chart-wrap" id="chartWrap" aria-label="24小时气温折线图"></div>
+          </article>
+
+          <article class="air-card glass" id="air">
+            <div class="section-title">
+              <h2>空气质量</h2>
+              <span id="airStatusText">更多</span>
+            </div>
+            <div class="aqi-ring">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="60" cy="60" r="46" class="ring-bg"></circle>
+                <circle cx="60" cy="60" r="46" class="ring-fg" id="aqiRing"></circle>
+              </svg>
+              <div>
+                <strong id="aqiText">35</strong>
+                <span id="aqiLevelText">优</span>
+              </div>
+            </div>
+            <p>主要污染物（μg/m³）</p>
+            <div class="pollutants" id="pollutants"></div>
+            <div class="air-note" id="airNote">空气清新，快去呼吸新鲜空气吧！</div>
+          </article>
+        </section>
+
+        <section class="life-grid" id="life" aria-label="生活指数">
+          <article class="life-card glass">
+            <img src="functional-icons/clothing.png" alt="" />
+            <div><h3>穿衣建议</h3><strong id="dressIndex">舒适</strong><p id="dressText">建议薄外套或衬衫，早晚微凉注意保暖。</p></div>
+          </article>
+          <article class="life-card glass">
+            <img src="functional-icons/exercise.png" alt="" />
+            <div><h3>运动指数</h3><strong id="sportIndex">适宜</strong><p id="sportText">天气不错，适合进行户外运动。</p></div>
+          </article>
+          <article class="life-card glass">
+            <img src="functional-icons/driving.png" alt="" />
+            <div><h3>洗车指数</h3><strong id="carIndex">较适宜</strong><p id="carText">未来一天无明显降水，适合洗车。</p></div>
+          </article>
+          <article class="life-card glass">
+            <img src="functional-icons/mask.png" alt="" />
+            <div><h3>感冒指数</h3><strong id="coldIndex">较易发</strong><p id="coldText">昼夜温差较大，注意增减衣物。</p></div>
+          </article>
+          <article class="life-card glass">
+            <img src="functional-icons/fishing.png" alt="" />
+            <div><h3>钓鱼指数</h3><strong id="fishIndex">适宜</strong><p id="fishText">风力温和，水温适中，适合垂钓。</p></div>
+          </article>
+          <article class="life-card glass">
+            <img src="functional-icons/luggage.png" alt="" />
+            <div><h3>出行建议</h3><strong id="travelIndex">适宜</strong><p id="travelText">交通状况正常，祝你旅途愉快！</p></div>
+          </article>
+        </section>
+      </main>
+
+      <footer>
+        <span>© 2026 次元天气 All Rights Reserved.</span>
+        <nav aria-label="页脚链接">
+          <a href="#today">关于我们</a>
+          <a href="#today">隐私政策</a>
+          <a href="#today">联系我们</a>
+          <a href="#today">意见反馈</a>
+        </nav>
+      </footer>
+
+      <img class="corner-mascot" src="mascot-assets/cloud-mascot-bow.png" alt="" />
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
